@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 aiohttp = "==3.9.0b0"
 openai = "*"
+langchain = "*"
 
 [dev-packages]
 
