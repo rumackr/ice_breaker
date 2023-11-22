@@ -3,20 +3,27 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 
 from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
+from output_parsers import person_intel_parser, PersonIntel
 from third_parties.linkedin import scrape_linkedin_profile
 
-if __name__ == "__main__":
-    print("Hello LangChain!")
-    name_to_search = input("Please Enter the Persons Full Name:\n")
-    linkedin_profile_url = linkedin_lookup_agent(name=name_to_search)
+
+def ice_break(name: str) -> PersonIntel:
+    linkedin_profile_url = linkedin_lookup_agent(name=name)
 
     summary_template = """
-        given the Linkedin {information} about a person from I want you create:
+        Given the Linkedin {information} about a person from I want you create:
         1. a short summary
         2. two interesting facts about them
-    """
+        3. A topic that may interest them.
+        4. 2 creative Ice breakers to open A Conversation with them
+        \n{format_instructions} 
+        """
     summary_prompt_template = PromptTemplate(
-        input_variables=["information"], template=summary_template
+        input_variables=["information"],
+        template=summary_template,
+        partial_variables={
+            "format_instructions": person_intel_parser.get_format_instructions()
+        },
     )
 
     llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
@@ -27,4 +34,10 @@ if __name__ == "__main__":
         linkedin_profile_url=linkedin_profile_url
     )
 
-    print(chain.run(information=linkedin_data))
+    result = chain.run(information=linkedin_data)
+
+    return person_intel_parser.parse(result)
+
+if __name__ == "__main__":
+    print("Hello LangChain!")
+    result = ice_break(name="Reid Rumack")
