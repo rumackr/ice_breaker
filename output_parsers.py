@@ -15,7 +15,7 @@ class PersonIntel(BaseModel):
             "summary": self.summary,
             "facts": self.facts,
             "topics_of_interest": self.topics_of_interest,
-            "ice_breakers": self.ice_breakers
+            "ice_breakers": self.ice_breakers,
         }
 
         return to_ret

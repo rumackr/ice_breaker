@@ -7,6 +7,7 @@ name = "pypi"
 aiohttp = "==3.9.0b0"
 openai = "*"
 langchain = "*"
+flask = "*"
 
 [dev-packages]
 

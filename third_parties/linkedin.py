@@ -20,14 +20,15 @@ def scrape_linkedin_profile(linkedin_profile_url: str):
     #     "https://gist.githubusercontent.com/rumackr/824b69d7791cb0c0ded8b5b18190e8d8/raw/8b6c4d9b59e8287a21b6633b1c638b4f944c1397/reid_rumack.json")
     #
     data = response.json()
-
+    if data.get("profile_pic_url") == None:
+        data["profile_pic_url"] = "https://www.jobscan.co/wp-content/uploads/13-Brian-Murphey-_-LinkedIn.png"
     ## For limiting token ingest
     data = {
         k: v
         for k, v in data.items()
         # remove empty fields and Certifcations and people_also_viewed
         if v not in ([], "", "", None)
-           and k not in ["people_also_viewed", "certifications"]
+           and k not in ["people_also_viewed", "certifications", "accomplishment_courses"]
     }
 
     if data.get("groups"):
